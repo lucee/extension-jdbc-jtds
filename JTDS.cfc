@@ -1,5 +1,6 @@
 <cfcomponent extends="types.Driver" output="false" implements="types.IDatasource">
-	<cfset this.className="net.sourceforge.jtds.jdbc.Driver">
+	<cfset this.className="{class-name}">
+	<cfset this.bundleName="{bundle-name}">
 	<cfset this.dsn="jdbc:jtds:sqlserver://{host}:{port}/{database}">
 		
 	<cfset this.type.port=this.TYPE_FREE>
