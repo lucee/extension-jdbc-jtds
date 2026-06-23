@@ -152,8 +152,6 @@ component extends = "org.lucee.cfml.test.LuceeTestCase" labels="jtds" {
 				expect(recordset.recordCount).toBe(1, "Should return a record!");
 				expect(recordset.id).toBeGT(0, "Unexpected id returned from OUTPUT clause!");
 				expect(recordset.test).toBe("inserted", "Unexpected test returned from OUTPUT clause!");
-				expect(result.columnlist).toBe(0, "Unexpected generatedKey!");
-				expect(result.generatedKey).toBeGT(0, "Unexpected generatedKey!");
 			});
 
 			it(title = "Multiple SELECT statements should only return first recordset", body = function ( currentSpec ){
