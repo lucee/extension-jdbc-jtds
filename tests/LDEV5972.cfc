@@ -1,7 +1,8 @@
 /**
  * Based on https://luceeserver.atlassian.net/browse/LDEV-5972
- * Tests that RAISERROR is properly surfaced in modern mode, and silently ignored in legacy mode.
- * Adapted to use the jTDS driver explicitly.
+ * Tests RAISERROR handling with the jTDS driver under both modern=true and modern=false modes.
+ * Note: unlike the Microsoft MSSQL driver, jTDS always surfaces RAISERROR regardless of the
+ * useMSSQLModern flag — so both modes expect an exception here.
  * Requires Lucee 7+ (useMSSQLModern field was added in Lucee 7).
  */
 component extends="org.lucee.cfml.test.LuceeTestCase" labels="jtds" {
@@ -24,8 +25,8 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="jtds" {
 		describe( "LDEV-5972: MSSQL RAISERROR handling with jTDS driver", function() {
 
 			describe( "RAISERROR after SELECT", function() {
-				it( title="modern=false (RAISERROR silently ignored - known limitation)", skip=isNotSupported(), body=function() {
-					runRaiserrorAfterSelect( modern=false, expectedMessage="[no exception found]" );
+				it( title="modern=false (jTDS always throws RAISERROR)", skip=isNotSupported(), body=function() {
+					runRaiserrorAfterSelect( modern=false, expectedMessage="Oops! Something went wrong!" );
 				});
 				it( title="modern=true (RAISERROR properly caught)", skip=isNotSupported(), body=function() {
 					runRaiserrorAfterSelect( modern=true, expectedMessage="Oops! Something went wrong!" );
@@ -33,8 +34,8 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="jtds" {
 			});
 
 			describe( "RAISERROR after INSERT", function() {
-				it( title="modern=false (RAISERROR silently ignored - known limitation)", skip=isNotSupported(), body=function() {
-					runRaiserrorAfterInsert( modern=false, expectedMessage="[no exception found]" );
+				it( title="modern=false (jTDS always throws RAISERROR)", skip=isNotSupported(), body=function() {
+					runRaiserrorAfterInsert( modern=false, expectedMessage="Insert failed!" );
 				});
 				it( title="modern=true (RAISERROR properly caught)", skip=isNotSupported(), body=function() {
 					runRaiserrorAfterInsert( modern=true, expectedMessage="Insert failed!" );
@@ -42,8 +43,8 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="jtds" {
 			});
 
 			describe( "RAISERROR with multiple statements", function() {
-				it( title="modern=false (RAISERROR silently ignored - known limitation)", skip=isNotSupported(), body=function() {
-					runRaiserrorMultipleStatements( modern=false, expectedMessage="[no exception found]" );
+				it( title="modern=false (jTDS always throws RAISERROR)", skip=isNotSupported(), body=function() {
+					runRaiserrorMultipleStatements( modern=false, expectedMessage="Multi-statement error!" );
 				});
 				it( title="modern=true (RAISERROR properly caught)", skip=isNotSupported(), body=function() {
 					runRaiserrorMultipleStatements( modern=true, expectedMessage="Multi-statement error!" );
