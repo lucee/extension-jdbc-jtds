@@ -53,7 +53,7 @@ jobs:
         lucee: ${{ fromJSON(vars.LUCEE_TEST_VERSIONS_PLUS) }}
     services:
       sql-server:
-        image: mcr.microsoft.com/mssql/server:2019-latest
+        image: mcr.microsoft.com/mssql/server:2022-latest
         env:
           MSSQL_PID: Express
           ACCEPT_EULA: Y
@@ -61,7 +61,7 @@ jobs:
         ports:
           - 1433:1433
         options: >-
-          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P 'Lucee!1433' -Q 'SELECT 1' -C"
+          --health-cmd "bash -c 'cat < /dev/null > /dev/tcp/localhost/1433'"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
