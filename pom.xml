@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://www.w3.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lucee</groupId>
     <artifactId>jtds-jdbc-extension</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>jTDS JDBC</name>
 
@@ -16,14 +16,21 @@
         <id>2BCD080F-4E1E-48F5-BEFE794232A21AF6</id>
         <image>https://raw.githubusercontent.com/lucee/extension-jdbc-jtds/master/source/images/logo.png</image>
         <buildDate>${maven.build.timestamp}</buildDate>
-        <luceeCoreVersion>5.3.2.63-SNAPSHOT</luceeCoreVersion>
+        <luceeCoreVersion>5.0.0.0</luceeCoreVersion>
         <connstr>jdbc:jtds:sqlserver://{host}:{port}/{database}</connstr>
         <jdbcid>jtds</jdbcid>
         <label>jTDS (MSSQL,Sybase)</label>
         <releaseType>server</releaseType>
+        <driverClass>net.sourceforge.jtds.jdbc.Driver</driverClass>
+        <bundleName>net.sourceforge.jtds</bundleName>
+        <bundleVersion>${mvnVersion}</bundleVersion>
+        <mvnGroupId>net.sourceforge.jtds</mvnGroupId>
+        <mvnArtifactId>jtds</mvnArtifactId>
+        <mvnVersion>1.3.1</mvnVersion>
         <release.url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</release.url>
         <snapshot.url>https://oss.sonatype.org/content/repositories/snapshots/</snapshot.url>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.openjdk.nashorn</groupId>
@@ -34,9 +41,10 @@
         <dependency>
             <groupId>net.sourceforge.jtds</groupId>
             <artifactId>jtds</artifactId>
-            <version>${project.version}</version>
+            <version>${mvnVersion}</version>
         </dependency>
     </dependencies>
+
     <scm>
         <url>https://github.com/lucee/extension-jdbc-jtds</url>
         <connection>scm:git:git://github.com/lucee/extension-jdbc-jtds.git</connection>
@@ -81,7 +89,6 @@
             </activation>
             <build>
                 <plugins>
-                    <!-- GPG sign -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -96,21 +103,22 @@
                                 <configuration>
                                     <files>
                                         <file>${project.build.directory}/${project.artifactId}-${project.version}.lex</file>
+                                        <file>${project.build.directory}/${project.artifactId}-${project.version}.lite.lex</file>
                                     </files>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
                     <plugin>
-                      <groupId>org.apache.maven.plugins</groupId>
-                      <artifactId>maven-release-plugin</artifactId>
-                      <version>3.0.0</version>
-                      <configuration>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <useReleaseProfile>false</useReleaseProfile>
-                        <releaseProfiles>release</releaseProfiles>
-                        <goals>deploy</goals>
-                      </configuration>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <releaseProfiles>release</releaseProfiles>
+                            <goals>deploy</goals>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -144,31 +152,6 @@
                 </executions>
             </plugin>
 
-
-<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-jtds-jar</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeGroupIds>net.sourceforge.jtds</includeGroupIds>
-                            <includeArtifactIds>jtds</includeArtifactIds>
-                            <includeVersion>${project.version}</includeVersion> 
-                            <outputDirectory>${project.basedir}</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Antrun plugin to execute the Ant build -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -192,21 +175,21 @@
                                     <property name="id" value="${id}"/>
                                     <property name="label" value="${label}"/>
                                     <property name="description" value="${project.description}"/>
-                                    <property name="groupId" value="${project.groupId}"/>
                                     <property name="filename" value="${project.artifactId}"/>
+                                    <property name="groupId" value="${project.groupId}"/>
+                                    <property name="artifactId" value="${project.artifactId}"/>
                                     <property name="jdbcid" value="${jdbcid}"/>
                                     <property name="connstr" value="${connstr}"/>
-                                    <property name="symName" value="${project.version}"/>
-                                    <property name="symVersion" value="${project.version}"/>
-
+                                    <property name="bundleversion" value="${project.version}"/>
+                                    <property name="luceeCoreVersion" value="${luceeCoreVersion}"/>
+                                    <property name="releaseType" value="${releaseType}"/>
+                                    <property name="driverClass" value="${driverClass}"/>
+                                    <property name="bundleName" value="${bundleName}"/>
+                                    <property name="bundleVersion" value="${bundleVersion}"/>
+                                    <property name="mvnGroupId" value="${mvnGroupId}"/>
+                                    <property name="mvnArtifactId" value="${mvnArtifactId}"/>
+                                    <property name="mvnVersion" value="${mvnVersion}"/>
                                 </ant>
-                                
-                                <!-- Clean up the copied MSSQL JAR after ant build -->
-                                <delete>
-                                    <fileset dir="${project.basedir}">
-                                        <include name="jtds-*.jar"/>
-                                    </fileset>
-                                </delete>
 
                                 <condition property="isSnapshot" value="true" else="false">
                                     <matches string="${project.version}" pattern=".*-SNAPSHOT"/>
@@ -225,9 +208,6 @@
                 </executions>
             </plugin>
 
-           
-
-            <!-- Build Helper Plugin to attach additional artifacts -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -245,13 +225,17 @@
                                     <file>${project.build.directory}/${project.artifactId}-${project.version}.lex</file>
                                     <type>lex</type>
                                 </artifact>
+                                <artifact>
+                                    <file>${project.build.directory}/${project.artifactId}-${project.version}.lite.lex</file>
+                                    <type>lex</type>
+                                    <classifier>lite</classifier>
+                                </artifact>
                             </artifacts>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- Clean plugin to remove extra folders -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -283,7 +267,6 @@
                 </executions>
             </plugin>
 
-            <!-- Maven Deploy Plugin to deploy the .lex file -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
@@ -305,19 +288,35 @@
                             <packaging>lex</packaging>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>deploy-lite</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/${project.artifactId}-${project.version}.lite.lex</file>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                            <classifier>lite</classifier>
+                            <repositoryId>ossrh</repositoryId>
+                            <url>${deploy.url}</url>
+                            <packaging>lex</packaging>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
-            <!-- Nexus Staging Maven Plugin to automate the release process -->
             <plugin>
-              <groupId>org.sonatype.central</groupId>
-              <artifactId>central-publishing-maven-plugin</artifactId>
-              <version>0.8.0</version>
-              <extensions>true</extensions>
-              <configuration>
-                <publishingServerId>ossrh</publishingServerId>
-                <autoPublish>true</autoPublish>
-              </configuration>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>ossrh</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                </configuration>
             </plugin>
         </plugins>
     </build>
