@@ -123,7 +123,8 @@ jobs:
           luceeVersionQuery: ${{ matrix.lucee.query }}
           extensionDir: ${{ github.workspace }}/target
         env:
-          testLabels: mssql
+          testLabels: jtds
+          testAdditional: ${{ github.workspace }}/tests
           MSSQL_SERVER: localhost
           MSSQL_USERNAME: sa
           MSSQL_PASSWORD: Lucee!1433
