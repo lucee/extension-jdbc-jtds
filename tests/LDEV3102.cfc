@@ -8,10 +8,8 @@ component extends = "org.lucee.cfml.test.LuceeTestCase" labels="jtds" {
 
 	function beforeAll(){
 		if ( !hasCredentials() ) return;
-
-		variables.jtdsDatasource = getJtdsDatasource();
-
-		query datasource=variables.jtdsDatasource {
+		var ds = getJtdsDatasource();
+		query datasource=ds {
 			echo("
 				drop table if exists LDEV3102;
 				create table LDEV3102 (id int primary key, test varchar(20));
@@ -27,7 +25,8 @@ component extends = "org.lucee.cfml.test.LuceeTestCase" labels="jtds" {
 
 	public function afterAll(){
 		if ( !hasCredentials() ) return;
-		query datasource=variables.jtdsDatasource {
+		var ds = getJtdsDatasource();
+		query datasource=ds {
 			echo("
 				drop table if exists LDEV3102
 				drop table if exists LDEV3102_NOPKEY
@@ -39,7 +38,7 @@ component extends = "org.lucee.cfml.test.LuceeTestCase" labels="jtds" {
 	function run( testResults, textbox ){
 		if ( !hasCredentials() ) return;
 
-		var ds = variables.jtdsDatasource;
+		var ds = getJtdsDatasource();
 
 		describe("LDEV-3102: multiple-statement queries with jTDS", function(){
 			beforeEach( function( currentSpec ){
