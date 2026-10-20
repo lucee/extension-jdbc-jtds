@@ -38,6 +38,8 @@ jobs:
           key: lucee-downloads
 
       - name: Import GPG key
+        # secrets are not available to fork PRs; the deploy job imports the key itself
+        if: github.event_name != 'pull_request'
         run: |
           echo "$GPG_PRIVATE_KEY" | base64 --decode | gpg --batch --import
         env:
